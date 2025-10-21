@@ -1,0 +1,6 @@
+create
+    definer = root@localhost procedure `New Product`(IN Product varchar(100), IN Price float, IN Seasonal tinyint(1))
+BEGIN
+INSERT INTO greggs (Product, Price, Seasonal) values (Product, Price, Seasonal);
+SET @idGreggs = (SELECT last_insert_id());
+END;
