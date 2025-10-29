@@ -1,0 +1,30 @@
+DELIMITER $$
+
+CREATE DEFINER = 'root'@'localhost' TRIGGER delete_old_salary_create_new
+AFTER UPDATE ON greggs_employees
+FOR EACH ROW
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM training.salary
+        WHERE EMPLOYEE_ID = NEW.Employee_ID
+    ) THEN
+        -- Move the old salary record to the archive table
+        INSERT INTO training.greggs_salary_archive (Employee_ID, Arch_Salary)
+        SELECT salary.Employee_ID, Salary
+        FROM training.salary
+        WHERE EMPLOYEE_ID = NEW.Employee_ID;
+
+        -- Delete the old salary record
+        DELETE FROM training.salary
+        WHERE EMPLOYEE_ID = NEW.Employee_ID;
+    END IF;
+
+    -- Insert the new salary record
+    INSERT INTO training.salary (EMPLOYEE_ID, SALARY)
+    VALUES (
+        NEW.Employee_ID,
+        NEW.Hourly_pay * NEW.Weekly_Hours_Worked * 52
+    );
+END$$
+
+DELIMITER ;
