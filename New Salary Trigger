@@ -1,0 +1,11 @@
+create definer = root@localhost trigger new_salaries
+    after insert
+    on greggs_employees
+    for each row
+BEGIN
+    INSERT INTO training.salary (EMPLOYEE_ID, SALARY)
+    VALUES (
+        NEW.Employee_ID,
+        NEW.Hourly_pay * NEW.Weekly_Hours_Worked * 52
+    );
+END;
