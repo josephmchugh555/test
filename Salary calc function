@@ -1,0 +1,16 @@
+create
+    definer = root@localhost function Payroll_Calculation() returns decimal(10, 2) deterministic
+BEGIN
+    DECLARE HourlySalary DECIMAL(10,2);
+    DECLARE WeeklyHours DECIMAL(10,2);
+    DECLARE Result DECIMAL(10,2);
+
+    SELECT Hourly_pay, Weekly_Hours_Worked
+    INTO HourlySalary, WeeklyHours
+    FROM training.greggs_employees;
+
+    SET Result = HourlySalary * WeeklyHours;
+
+    RETURN Result;
+END;
+
