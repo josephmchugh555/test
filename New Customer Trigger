@@ -1,0 +1,14 @@
+create definer = root@localhost trigger new_customer
+    after insert
+    on greggs_orders
+    for each row
+BEGIN
+    -- Check if the account number does NOT exist in greggs_customers
+    IF NOT EXISTS (
+        SELECT 1 FROM training.greggs_customers
+        WHERE Account_Number = NEW.Account_Number
+    ) THEN
+        INSERT INTO training.greggs_customers (Customer_Name, Account_Number, Date_Added)
+        VALUES (NEW.Customer_Name, NEW.Account_Number, NEW.Order_Date);
+    END IF;
+END;
