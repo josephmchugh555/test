@@ -1,0 +1,17 @@
+create
+    definer = root@localhost procedure Add_New_Order(IN p_customer_name varchar(45), IN p_account_number int,
+                                                     IN p_order_details varchar(45), IN p_order_date date)
+BEGIN
+    INSERT INTO greggs_orders (
+        Customer_Name,
+        Account_Number,
+        Order_Details,
+        Order_Date
+    )
+    VALUES (
+        p_customer_name,
+        p_account_number,
+        p_order_details,
+        p_order_date
+    );
+END;
